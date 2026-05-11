@@ -33286,18 +33286,18 @@ function openSummaryModal() {
     const chatId = appState.activeChatId;
     const chat = appState.chats[chatId];
     if (!chat) return;
-
+    
     // 显示查看页面，隐藏设置页面
-    document.getElementById('summary-view-page').style.display = 'block';
+    document.getElementById('summary-view-page').style.display = 'flex';
     document.getElementById('summary-settings-page').style.display = 'none';
-
+    
     // 渲染记忆卡片（内部会调用 updateMemoryCount）
     renderSummaryCards(chatId);
-
+    
     // 显示模态窗口 - 使用 style.display
     const modal = document.getElementById('summary-modal');
     modal.style.display = 'flex';
-
+    
     // 点击背景遮罩关闭模态窗口
     modal.onclick = function(e) {
         if (e.target === modal) {
@@ -33323,7 +33323,7 @@ function switchToSettingsPage() {
 // 切换回查看页面
 function switchToViewPage() {
     document.getElementById('summary-settings-page').style.display = 'none';
-    document.getElementById('summary-view-page').style.display = 'block';
+    document.getElementById('summary-view-page').style.display = 'flex';
 }
 
 // 更新记忆数量显示（已删除重复函数，统一使用 updateMemoryCount）
