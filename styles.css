@@ -4661,11 +4661,48 @@ html.user-platform-ios .diary-reading-container {
 }
 
 .summary-card-content {
-    font-size: 14px;
-    line-height: 1.8;
-    color: #333;
-    margin-bottom: 12px;
-    white-space: pre-wrap;
+font-size: 14px;
+line-height: 1.8;
+color: #333;
+margin-bottom: 12px;
+white-space: pre-wrap;
+word-wrap: break-word;
+overflow-wrap: break-word;
+}
+
+.summary-card-content.collapsed {
+display: -webkit-box;
+-webkit-line-clamp: 5;
+-webkit-box-orient: vertical;
+overflow: hidden;
+text-overflow: ellipsis;
+max-height: calc(1.8em * 5); /* 5行的高度 */
+}
+
+.summary-card-content.expanded {
+max-height: none;
+}
+
+.summary-expand-btn {
+background: none;
+border: none;
+color: #007AFF;
+font-size: 13px;
+cursor: pointer;
+padding: 4px 0;
+margin-top: 8px;
+display: inline-flex;
+align-items: center;
+gap: 4px;
+transition: opacity 0.2s;
+}
+
+.summary-expand-btn:hover {
+opacity: 0.7;
+}
+
+.summary-expand-btn:active {
+opacity: 0.5;
 }
 
 .summary-card-actions {

@@ -33119,26 +33119,61 @@ function renderSummaryCards(chatId) {
             hour: '2-digit',
             minute: '2-digit'
         });
-
+        
         // 全局标记 - 根据当前聊天的全局记忆开关状态显示
         const globalBadge = chat.globalMemoryEnabled ? '<span style="background: #007AFF; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 8px;">全局</span>' : '';
-
+        
+        // 检查内容是否需要展开按钮（超过5行）
+        const lineCount = memory.content.split('\n').length;
+        const needsExpand = lineCount > 5 || memory.content.length > 300;
+        
         return `
-            <div class="summary-card">
-                <div class="summary-card-header">
-                    <span class="summary-card-time">📅 ${timeStr}${globalBadge}</span>
-                </div>
-                <div class="summary-card-content">${escapeHtml(memory.content)}</div>
-                <div class="summary-card-actions">
-                    <button class="summary-card-btn" onclick="editSummaryMemory(${actualIndex})">编辑</button>
-                    <button class="summary-card-btn delete" onclick="deleteSummaryMemory(${actualIndex})">删除</button>
-                </div>
+        <div class="summary-card" data-card-index="${actualIndex}">
+            <div class="summary-card-header">
+                <span class="summary-card-time">📅 ${timeStr}${globalBadge}</span>
             </div>
+            <div class="summary-card-content collapsed" data-content-index="${actualIndex}">${escapeHtml(memory.content)}</div>
+            ${needsExpand ? `<button class="summary-expand-btn" onclick="toggleSummaryExpand(${actualIndex})">
+                <span class="expand-text">展开</span>
+                <span class="expand-icon">▼</span>
+            </button>` : ''}
+            <div class="summary-card-actions">
+                <button class="summary-card-btn" onclick="editSummaryMemory(${actualIndex})">编辑</button>
+                <button class="summary-card-btn delete" onclick="deleteSummaryMemory(${actualIndex})">删除</button>
+            </div>
+        </div>
         `;
     }).join('');
-
+    
     // 更新记忆数量显示
     updateMemoryCount(chatId);
+}
+
+/**
+ * 切换总结内容的展开/收起状态
+ * @param {number} index - 总结索引
+ */
+function toggleSummaryExpand(index) {
+    const contentElement = document.querySelector(`.summary-card-content[data-content-index="${index}"]`);
+    const buttonElement = document.querySelector(`.summary-card[data-card-index="${index}"] .summary-expand-btn`);
+    
+    if (!contentElement || !buttonElement) return;
+    
+    const isCollapsed = contentElement.classList.contains('collapsed');
+    
+    if (isCollapsed) {
+        // 展开
+        contentElement.classList.remove('collapsed');
+        contentElement.classList.add('expanded');
+        buttonElement.querySelector('.expand-text').textContent = '收起';
+        buttonElement.querySelector('.expand-icon').textContent = '▲';
+    } else {
+        // 收起
+        contentElement.classList.remove('expanded');
+        contentElement.classList.add('collapsed');
+        buttonElement.querySelector('.expand-text').textContent = '展开';
+        buttonElement.querySelector('.expand-icon').textContent = '▼';
+    }
 }
 
 /**
